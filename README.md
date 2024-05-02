@@ -1,0 +1,17 @@
+# MAME4Wii
+Another port of MAME on Wii.
+
+## OVERVIEW
+This port of MAME on Wii is based on version 0.135 of offical MAME sources (<https://www.mamedev.org/>) 
+and on version 1.0 of (<https://wiibrew.org/wiki/MAME_Wii>)
+
+To compile this version you need my version of GRRLIB (<https://github.com/nebiun/GRRLIB>)
+
+## HOW TO COMPILE
+Run ./build_all.sh without parameters
+
+
+## CREDITS
+MAME Team
+Toad King
+
