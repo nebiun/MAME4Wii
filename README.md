@@ -12,6 +12,6 @@ Run ./build_all.sh without parameters
 
 
 ## CREDITS
-MAME Team
+MAME Team<br>
 Toad King
 
