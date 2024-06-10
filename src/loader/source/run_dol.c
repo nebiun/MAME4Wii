@@ -126,7 +126,7 @@ bool runDOL (const char* filename, int argc, const char** argv) {
 				}
 
 				fclose(dolFile);
-				IOS_ReloadIOS(36);
+			//	IOS_ReloadIOS(36);
 				/* Set CPU/BUS clock as Nintendo SDK apps require so. */
 				*(vu32*)0x800000F8 = 0x0E7BE2C0;
 				*(vu32*)0x800000FC = 0x2B73A840;

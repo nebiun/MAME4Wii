@@ -3,11 +3,13 @@
  */
 #include <grrlib.h>
 
-#define M4W_HOME 			"sd:/mame" 
-#define	M4W_LIBS			M4W_HOME"/libs"
-#define M4W_LOGDIR			M4W_HOME"/logs"
-#define M4W_CRASHDIR		M4W_HOME"/crash"
-#define	M4W_ROMS			M4W_HOME"/roms"
+#define M4W_HOME			"sd:/mame4wii"
+#define M4W_HOMEUSB			"usb:/mame4wii"
+#define	M4W_LIBS			"libs"
+#define M4W_LOGDIR			"logs"
+#define M4W_CRASHDIR		"crash"
+#define	M4W_ROMS			"roms"
+#define	M4W_SNAP			"snap"
 #define M4W_BYDESC	1
 #define M4W_BYROM	2
 
@@ -21,21 +23,26 @@
 #define M4W_NOLIB_COLOR		0xFFFF00FF
 #define M4W_SELECT_COLOR	0x00FFFFFF
 
-#define M4W_FLAGS_WORKING		0x00
-#define M4W_FLAGS_ROMMISSING	0x01
-#define M4W_FLAGS_NOTWORKING	0x02
-#define M4W_FLAGS_DOLMISSING	0x04
-#define M4W_FLAGS_TOOBIG		0x08
+#define M4W_FLAGS_WORKING		0x0
+#define M4W_FLAGS_ROMMISSING	0x1
+#define M4W_FLAGS_NOTWORKING	0x2
+#define M4W_FLAGS_DOLMISSING	0x4
+#define M4W_FLAGS_TOOBIG		0x8
+#define M4W_FLAGS_CHECKED		0x10
+#define M4W_FLAGS_CRASHED		0x20
+#define M4W_FLAGS_JOYSTICK		0x100
+#define M4W_FLAGS_ROMONUSB		0x1000
+#define M4W_FLAGS_DOLONUSB		0x2000
+#define M4W_FLAGS_PNGONUSB		0x4000
+#define M4W_FLAGS_PNGONSD		0x8000
 
 #define M4W_RUNNABLE(x)		(((x) & (M4W_FLAGS_ROMMISSING|M4W_FLAGS_DOLMISSING)) == 0)  
-
-typedef enum { UNCHECKED, OK, CRASHED } game_status_t;
+#define M4W_HASSNAP(x)		(((x) & (M4W_FLAGS_PNGONUSB|M4W_FLAGS_PNGONUSB)) == 0) 
 
 typedef struct {
 	const char *rom;
 	const char *desc;
 	const char *exe;
-	game_status_t status;
 	u16 flags;
 } game_entry_t;
 

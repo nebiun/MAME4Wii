@@ -963,7 +963,7 @@ MACHINE_DRIVER_END
  *  Alpha Fighter / Head On
  *
  *************************************/
-
+#if 0
 static WRITE8_HANDLER( invho2_io_w )
 {
 	if (offset & 0x01)  invho2_audio_w(space, 0, data);
@@ -971,7 +971,7 @@ static WRITE8_HANDLER( invho2_io_w )
 	if (offset & 0x08)  assert_coin_status();
 	if (offset & 0x40)  vicdual_palette_bank_w(space, 0, data);
 }
-
+#endif
 
 static WRITE8_HANDLER( invds_io_w )
 {
@@ -1064,7 +1064,7 @@ static ADDRESS_MAP_START( vicdual_dualgame_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x8800, 0x8fff) AM_MIRROR(0x7000) AM_RAM_WRITE(vicdual_characterram_w) AM_BASE(&vicdual_characterram)
 ADDRESS_MAP_END
 
-
+#if 0
 static ADDRESS_MAP_START( invho2_io_map, ADDRESS_SPACE_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
 
@@ -1077,7 +1077,7 @@ static ADDRESS_MAP_START( invho2_io_map, ADDRESS_SPACE_IO, 8 )
        game can write to multiple locations at once */
 	AM_RANGE(0x00, 0x7f) AM_WRITE(invho2_io_w)
 ADDRESS_MAP_END
-
+#endif
 
 static ADDRESS_MAP_START( invds_io_map, ADDRESS_SPACE_IO, 8 )
 	ADDRESS_MAP_GLOBAL_MASK(0x7f)
@@ -1204,7 +1204,7 @@ static ADDRESS_MAP_START( alphaho_io_map, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x00, 0x7f) AM_WRITE(alphaho_io_w)
 ADDRESS_MAP_END
 #endif
-
+#if 0
 static INPUT_PORTS_START( invho2 )
 	PORT_START("IN0")
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_UNKNOWN )	/* probably unused */
@@ -1257,7 +1257,7 @@ static INPUT_PORTS_START( invho2 )
 
 	PORT_COIN
 INPUT_PORTS_END
-
+#endif
 
 static INPUT_PORTS_START( invds )
 	PORT_START("IN0")
@@ -1840,7 +1840,7 @@ static MACHINE_DRIVER_START( vicdual_dualgame_root )
 
 MACHINE_DRIVER_END
 
-
+#if 0
 static MACHINE_DRIVER_START( invho2 )
 
 	/* basic machine hardware */
@@ -1854,7 +1854,7 @@ static MACHINE_DRIVER_START( invho2 )
 	MDRV_IMPORT_FROM(headon_audio)
 
 MACHINE_DRIVER_END
-
+#endif
 
 static MACHINE_DRIVER_START( invds )
 
@@ -2750,7 +2750,7 @@ ROM_START( car2 )
 	ROM_LOAD( "316-0206.u65", 0x0000, 0x0020, CRC(9617d796) SHA1(7cff2741866095ff42eadd8022bea349ec8d2f39) )	/* control PROM */
 ROM_END
 #endif
-
+#if 0
 ROM_START( invho2 )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "271b.u33",     0x0000, 0x0400, CRC(44356a73) SHA1(6ff1050d84b6b7a006762c35e0b3d2befb0f90d6) )
@@ -2776,7 +2776,7 @@ ROM_START( invho2 )
 	ROM_REGION( 0x0020, "user1", 0 )	/* timing PROM */
 	ROM_LOAD( "316-0206.u14", 0x0000, 0x0020, CRC(9617d796) SHA1(7cff2741866095ff42eadd8022bea349ec8d2f39) )	/* control PROM */
 ROM_END
-
+#endif
 #if 0
 ROM_START( sspacaho )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -3254,7 +3254,7 @@ GAME( 1979, headon,   0,        headon,   headon,   0, ROT0,   "Gremlin", "Head 
 //GAME( 1979, supcrash, headon,   headon,   supcrash, 0, ROT0,   "[Gremlim] (Video G Electronic Games bootleg)", "Super Crash (bootleg of Head On)", GAME_NO_SOUND )
 GAME( 1979, headon2,  0,        headon2,  headon2,  0, ROT0,   "Sega", "Head On 2",  GAME_IMPERFECT_SOUND )
 //GAME( 1979, car2,     headon2,  headon2,  car2,     0, ROT0,   "[Sega] (RZ Bologna bootleg)", "Car 2 (bootleg of Head On 2)",  GAME_IMPERFECT_SOUND ) // title still says 'HeadOn 2'
-GAME( 1979, invho2,   0,        invho2,   invho2,   0, ROT270, "Sega", "Invinco / Head On 2", GAME_IMPERFECT_SOUND )
+//GAME( 1979, invho2,   0,        invho2,   invho2,   0, ROT270, "Sega", "Invinco / Head On 2", GAME_IMPERFECT_SOUND )
 GAME( 1980, nsub,     0,        nsub,     nsub,     0, ROT270, "Sega", "N-Sub (upright)", GAME_IMPERFECT_GRAPHICS | GAME_NO_SOUND )
 //GAME( 1980, samurai,  0,        samurai,  samurai,  0, ROT270, "Sega", "Samurai", GAME_NO_SOUND )
 GAME( 1979, invinco,  0,        invinco,  invinco,  0, ROT270, "Sega", "Invinco", GAME_IMPERFECT_SOUND )

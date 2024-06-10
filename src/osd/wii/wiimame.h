@@ -17,6 +17,9 @@
 #include <malloc.h>
 #include <stdarg.h>
 
+#define MAME4WII_HOME		"sd:/mame4wii"
+#define MAME4WII_HOMEUSB	"usb:/mame4wii"
+
 //#define WIIMAIN_DEBUG	1
 //#define WIIAUDIO_DEBUG	1
 //#define WIIDIR_DEBUG	1

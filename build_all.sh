@@ -7,17 +7,22 @@ obj=obj/wii/${prj}
 hbc_src="src/hbc"
 hbc_home="HBC"
 hbc_apps="${hbc_home}/apps/mame4wii"
-hbc_mame="${hbc_home}/mame/"
+hbc_mame="${hbc_home}/mame4wii/"
 hbc_mamelibs="${hbc_mame}/libs"
 hbc_mamesnap="${hbc_mame}/snap"
 hbc_mamecrash="${hbc_mame}/crash"
 hbc_mamelogs="${hbc_mame}/logs"
 hbc_mameroms="${hbc_mame}/roms"
-m4w_version="1.35.2"
+m4w_version="1.35.3"
 elf_home="ELF"
 cwd=$(pwd)
 
-rm -fr ${obj}/libosd.a ${obj}/osd
+if [[ "$1" == "--osd" ]]
+then
+	rm -fr ${obj}/libosd.a ${obj}/osd
+	shift
+fi
+
 if [[ "$1" == "--force" ]]
 then
 	rm -fr ${obj}
@@ -32,11 +37,12 @@ then
 	lista_totale="${lista_taito} ${lista_sega} ${lista_konami} ${lista_neogeo}"
 
 	mkdir -p ${hbc_mamelibs}
-	
+
 	rm -f ${hbc_mamelibs}/*
 	rm -f ${elf_home}/*
 
 	echo "Make LIBS"
+	rm -f ${obj}/version.o
 	for ll in ${lista_totale}
 	do
 		build="MAME4Wii${ll}"
@@ -50,7 +56,7 @@ then
 				make_par="${make_par} -D${l}"
 			fi
 		done
-		rm -f ${obj}/version.o ${obj}/mame/4wii.o ${build}.elf ${build}.dol
+		rm -f ${obj}/mame/4wii.o ${build}.elf ${build}.dol
 
 		make GAME_LIST="${make_par}" WII_VERSION="${m4w_version}" WII_BUILD="${build}"
 		if [[ $? -eq 0 ]]
@@ -70,7 +76,7 @@ fi
 # MENU
 echo "Make MENU"
 mkdir -p ${hbc_apps}
-rm -f ${hbc_apps}/* 
+rm -f ${hbc_apps}/*
 cd src/menu
 make clean
 make
@@ -116,7 +122,7 @@ then
 
 	# DIRECTORES
 	mkdir -p ${hbc_mamesnap}
-	mkdir -p ${hbc_mamelogs} 
+	mkdir -p ${hbc_mamelogs}
 	mkdir -p ${hbc_mamecrash}
 	mkdir -p ${hbc_mameroms}
 
@@ -126,9 +132,16 @@ then
 
 	# BUILD APP ARCHIVE
 	cd ${hbc_home}
-	rm -f mame4wii-${m4w_version}.zip
+	rm -f mame4wii-*.zip
 	zip -r mame4wii-${m4w_version}.zip apps mame
 	cd ${cwd}
-	
-	cp -f mame4wii_snap/* ${hbc_mamesnap}/.
+
+	if [[ -d mame4wii_snap ]]
+	then
+		cp -f mame4wii_snap/* ${hbc_mamesnap}/.
+		cd mame4wii_snap
+		rm -f ${cwd}/${hbc_home}/mame4wii_snap.zip
+		zip -r ${cwd}/${hbc_home}/mame4wii_snap.zip *.png
+		cd ${cwd}
+	fi
 fi

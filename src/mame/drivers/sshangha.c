@@ -71,20 +71,23 @@ extern UINT16 *sshangha_pf1_data;
 extern UINT16 *sshangha_pf2_data;
 extern UINT16 *sshangha_pf1_rowscroll, *sshangha_pf2_rowscroll;
 
+#if 0
 static UINT16 *sshangha_prot_data;
 
 static UINT16 *sshangha_sound_shared_ram;
+#endif
 
 /******************************************************************************/
-
+#if 0
 static WRITE16_HANDLER( sshangha_protection16_w )
 {
 	COMBINE_DATA(&sshangha_prot_data[offset]);
 
 	logerror("CPU #0 PC %06x: warning - write unmapped control address %06x %04x\n",cpu_get_pc(space->cpu),offset<<1,data);
 }
-
+#endif
 /* Protection/IO chip 146 */
+#if 0
 static READ16_HANDLER( sshangha_protection16_r )
 {
 	switch (offset)
@@ -102,7 +105,7 @@ static READ16_HANDLER( sshangha_protection16_r )
 	logerror("CPU #0 PC %06x: warning - read unmapped control address %06x\n",cpu_get_pc(space->cpu),offset<<1);
 	return sshangha_prot_data[offset];
 }
-
+#endif
 #if 0
 static READ16_HANDLER( sshanghb_protection16_r )
 {
@@ -121,13 +124,15 @@ static READ16_HANDLER( sshanghb_protection16_r )
 #endif
 
 /* Probably returns 0xffff when sprite DMA is complete, the game waits on it */
+#if 0
 static READ16_HANDLER( deco_71_r )
 {
 	return 0xffff;
 }
+#endif
 
 /******************************************************************************/
-
+#if 0
 static MACHINE_RESET( sshangha )
 {
 	const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
@@ -139,9 +144,9 @@ static MACHINE_RESET( sshangha )
        I can't tell however if this is accurate or not. */
 	sshangha_control_0_w(space, 0, 0x10, 0x00ff);
 }
-
+#endif
 /******************************************************************************/
-
+#if 0
 static ADDRESS_MAP_START( sshangha_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
 	AM_RANGE(0x100000, 0x10000f) AM_RAM AM_BASE(&sshangha_sound_shared_ram)
@@ -167,7 +172,7 @@ static ADDRESS_MAP_START( sshangha_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xfec000, 0xff3fff) AM_RAM
 	AM_RANGE(0xff4000, 0xff47ff) AM_READWRITE(sshangha_protection16_r,sshangha_protection16_w) AM_BASE(&sshangha_prot_data)
 ADDRESS_MAP_END
-
+#endif
 #if 0
 static ADDRESS_MAP_START( sshanghb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x03ffff) AM_ROM
@@ -199,18 +204,21 @@ ADDRESS_MAP_END
 /******************************************************************************/
 
 /* 8 "sound latches" shared between main and sound cpus. */
-
+#if 0
 static READ8_HANDLER(sshangha_sound_shared_r)
 {
 	return sshangha_sound_shared_ram[offset] & 0xff;
 }
-
+#endif
+#if 0
 static WRITE8_HANDLER(sshangha_sound_shared_w)
 {
 	sshangha_sound_shared_ram[offset] = data & 0xff;
 }
+#endif
 
 /* Note: there's rom data after 0x8000 but the game never seem to call a rom bank, left-over? */
+#if 0
 static ADDRESS_MAP_START( sshangha_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0xc000, 0xc001) AM_DEVREADWRITE("ym", ym2203_r,ym2203_w)
@@ -218,9 +226,9 @@ static ADDRESS_MAP_START( sshangha_sound_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xf800, 0xf807) AM_READWRITE(sshangha_sound_shared_r,sshangha_sound_shared_w)
 	AM_RANGE(0xf808, 0xffff) AM_RAM
 ADDRESS_MAP_END
-
+#endif
 /******************************************************************************/
-
+#if 0
 static INPUT_PORTS_START( sshangha )
 	PORT_START("INPUTS")	/* 0xfec046.b - 0xfec047.b */
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_8WAY PORT_PLAYER(1)
@@ -306,9 +314,9 @@ static INPUT_PORTS_START( sshangha )
 	PORT_DIPSETTING(      0x0000, DEF_STR( No ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( Yes ) )
 INPUT_PORTS_END
-
+#endif
 /******************************************************************************/
-
+#if 0
 static const gfx_layout charlayout =
 {
 	8,8,	/* 8*8 chars */
@@ -319,7 +327,8 @@ static const gfx_layout charlayout =
 	{ 0*16, 1*16, 2*16, 3*16, 4*16, 5*16, 6*16, 7*16 },
 	16*8
 };
-
+#endif
+#if 0
 static const gfx_layout tilelayout =
 {
 	16,16,
@@ -332,20 +341,22 @@ static const gfx_layout tilelayout =
 			8*16, 9*16, 10*16, 11*16, 12*16, 13*16, 14*16, 15*16 },
 	64*8
 };
-
+#endif
+#if 0
 static GFXDECODE_START( sshangha )
 	GFXDECODE_ENTRY( "gfx1", 0, charlayout,  256, 64 ) /* Characters 8x8 */
 	GFXDECODE_ENTRY( "gfx1", 0, tilelayout,  256, 64 ) /* Tiles 16x16 */
 	GFXDECODE_ENTRY( "gfx2", 0, tilelayout,    0, 32 ) /* Sprites 16x16 */
 GFXDECODE_END
-
+#endif
 /******************************************************************************/
-
+#if 0
 static void irqhandler(const device_config *device, int state)
 {
 	cputag_set_input_line(device->machine, "audiocpu", 0, state);
 }
-
+#endif
+#if 0
 static const ym2203_interface ym2203_config =
 {
 	{
@@ -355,7 +366,8 @@ static const ym2203_interface ym2203_config =
 	},
 	irqhandler
 };
-
+#endif
+#if 0
 static MACHINE_DRIVER_START( sshangha )
 
 	/* basic machine hardware */
@@ -399,7 +411,7 @@ static MACHINE_DRIVER_START( sshangha )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "lspeaker", 0.27)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.27)
 MACHINE_DRIVER_END
-
+#endif
 #if 0
 static MACHINE_DRIVER_START( sshanghb )
 	MDRV_IMPORT_FROM( sshangha )
@@ -409,7 +421,7 @@ static MACHINE_DRIVER_START( sshanghb )
 MACHINE_DRIVER_END
 #endif
 /******************************************************************************/
-
+#if 0
 ROM_START( sshangha )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "ss007-1.u28", 0x00000, 0x20000, CRC(bc466edf) SHA1(b96525b2c879d15b46a7753fa6ebf12a851cd019) )
@@ -429,7 +441,7 @@ ROM_START( sshangha )
 	ROM_REGION( 0x40000, "oki", 0 )	/* ADPCM samples */
 	ROM_LOAD( "ss005.u86", 0x000000, 0x040000, CRC(c53a82ad) SHA1(756e453c8b5ce8e47f93fbda3a9e48bb73e93e2e) )
 ROM_END
-
+#endif
 #if 0
 ROM_START( sshanghab )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 68000 code */
@@ -451,7 +463,7 @@ ROM_START( sshanghab )
 	ROM_LOAD( "ss005.u86", 0x000000, 0x040000, CRC(c53a82ad) SHA1(756e453c8b5ce8e47f93fbda3a9e48bb73e93e2e) )
 ROM_END
 #endif
-
+#if 0
 static DRIVER_INIT( sshangha )
 {
 #if SSHANGHA_HACK
@@ -467,7 +479,7 @@ static DRIVER_INIT( sshangha )
 	RAM[0x00042a/2] = 0x4e71;
 #endif
 }
+#endif
 
-
-GAME( 1992, sshangha, 0,        sshangha, sshangha, sshangha, ROT0, "Hot-B.",  "Super Shanghai Dragon's Eye (Japan)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
+//GAME( 1992, sshangha, 0,        sshangha, sshangha, sshangha, ROT0, "Hot-B.",  "Super Shanghai Dragon's Eye (Japan)", GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 //GAME( 1992, sshanghab,sshangha, sshanghb, sshangha, sshangha, ROT0, "bootleg", "Super Shanghai Dragon's Eye (World, bootleg)", 0 )

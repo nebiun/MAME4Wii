@@ -26,7 +26,7 @@
 #define M4W_DIMKEY_X		37
 #define M4W_DIMKEY_Y		38
 #define M4W_DIMBAR_Y		476.0		
-
+#define M4W_MAXLNAME		32
 
 static GRRLIB_ttfFont *ttf_font;
 static GRRLIB_texImg *logo;
@@ -120,8 +120,8 @@ static void help()
 
 int main(int argc, char *argv[]) 
 {
-	const char *snapdir=M4W_HOME"/snap";
 	char img_path[PATH_MAX];
+	char noimg_path[PATH_MAX];
 	char pattern[M4W_MAX_INPUT+1] = { '\0' };
 	GRRLIB_texImg *img = NULL;
 	GRRLIB_texImg *keyb, *pointer, *scroll, *cursor;
@@ -153,6 +153,12 @@ int main(int argc, char *argv[])
 	
 	GRRLIB_FillScreen(RGBA(0x00,0x00,0x00,0x00));	// black;
 	
+	// Check default snap
+	snprintf(noimg_path,sizeof(noimg_path),"%s/%s/nosnap.png",M4W_HOMEUSB,M4W_SNAP);
+	if(access(noimg_path, R_OK) != 0) {
+		snprintf(noimg_path,sizeof(noimg_path),"%s/%s/nosnap.png",M4W_HOME,M4W_SNAP);
+	}
+
 	current = 0;
 	game_list = initGamelist(&n_games);
 	if(argc > 1) {
@@ -241,16 +247,24 @@ int main(int argc, char *argv[])
 		}
 		if (btn & WPAD_BUTTON_B) {
 			char exe_path[PATH_MAX];
+			char loader_path[PATH_MAX];
 			const char *args[5];
 			const int nargs=4;
 			int err;
 		
-			if(game_list[current].status == UNCHECKED)
+			if(! (game_list[current].flags & M4W_FLAGS_CHECKED))
 				check_game(&game_list[current]);
 				
 			if(M4W_RUNNABLE(game_list[current].flags)) {	
 				// Run the .dol
-				snprintf(exe_path,sizeof(exe_path),"%s/%s",M4W_LIBS,game_list[current].exe);
+				if(game_list[current].flags & M4W_FLAGS_DOLONUSB) {
+					snprintf(exe_path,sizeof(exe_path),"%s/%s/%s",M4W_HOMEUSB, M4W_LIBS, game_list[current].exe);
+					snprintf(loader_path,sizeof(loader_path),"%s/%s/loader.dol",M4W_HOMEUSB, M4W_LIBS);
+				}
+				else {
+					snprintf(exe_path,sizeof(exe_path),"%s/%s/%s",M4W_HOME, M4W_LIBS, game_list[current].exe);
+					snprintf(loader_path,sizeof(loader_path),"%s/%s/loader.dol",M4W_HOME, M4W_LIBS);
+				}
 				args[0] = "loader";
 				args[1] = exe_path;
 				args[2] = "mame4wii";
@@ -273,7 +287,7 @@ int main(int argc, char *argv[])
 				for(int i=0; i<nargs; i++) {
 					m4w_debug("arg[%d] = %s\n", i, args[i]);
 				}
-				err = runDOL (M4W_LIBS"/loader.dol", nargs, args);
+				err = runDOL (loader_path, nargs, args);
 				if(err != 0) {
 					m4w_debug("runDOL rtn = %d", err);
 					print_ttf(20, 250, M4W_TEXT_COLOR, "runDOL rtn = %d", err);
@@ -321,17 +335,8 @@ int main(int argc, char *argv[])
 			img = NULL;
 		}
 		
-		if(img == NULL) {
-			snprintf(img_path,sizeof(img_path),"%s/%s.png", snapdir, game_list[current].rom);
-			if(access(img_path, R_OK) != 0) {
-				snprintf(img_path,sizeof(img_path),"%s/nosnap.png", snapdir);
-			}
-			img = GRRLIB_LoadTextureFromFile(img_path);
-		}
-
 		show_logo();
 		
-		GRRLIB_DrawImg(M4W_POSKEY_X,0,img,0,1,1,0xffffffff);
 		GRRLIB_DrawImg(M4W_POSKEY_X,M4W_POSKEY_Y,keyb,0,1,1,0xffffffff);
 		GRRLIB_DrawImg(M4W_POSKEY_X-scroll->w,0,scroll,0,1,1, (slide != 0) ? 0xffffffff : 0xffffff8f);
 		GRRLIB_DrawImg(M4W_POSKEY_X-cursor->w,6+((M4W_DIMBAR_Y-24)/(n_games+1))*current,cursor,0,1,1, 0xffffffff);
@@ -341,17 +346,20 @@ int main(int argc, char *argv[])
 		
 		for(int i=start, j=0; i<end; i++, j++) {
 			if((i >= 0) && (i < n_games)) { 
-				char cut_name[32];
+				char cut_name[64];
 				u32 width;
 				u32 color;
 				
 				strncpy(cut_name, game_list[i].desc, sizeof(cut_name)-1);
-				cut_name[sizeof(cut_name)-1] = '\0';
-				
-				if(game_list[i].status == UNCHECKED)
+#if 0
+				sprintf(cut_name,"%x %s", game_list[i].flags, game_list[i].desc);
+#endif
+				cut_name[M4W_MAXLNAME] = '\0';	// Trunk the name, if needed
+							
+				if(! (game_list[i].flags & M4W_FLAGS_CHECKED))
 					check_game(&game_list[i]);
 
-				if(game_list[i].status == CRASHED) {
+				if(game_list[i].flags & M4W_FLAGS_CRASHED) {
 					color = M4W_CRASH_COLOR;
 				}
 				else if(game_list[i].flags & M4W_FLAGS_ROMMISSING) {
@@ -364,7 +372,7 @@ int main(int argc, char *argv[])
 					color = M4W_NOTWORK_COLOR;
 				}
 				else if(game_list[i].flags & M4W_FLAGS_TOOBIG) {
-					color = M4W_NOTWORK_COLOR;
+					color = M4W_CRASH_COLOR;
 				}
 				else {
 					color = M4W_GAMES_COLOR;
@@ -383,6 +391,20 @@ int main(int argc, char *argv[])
 				}
 			}
 		}
+		
+		if(img == NULL) {					
+			if(game_list[current].flags & M4W_FLAGS_PNGONUSB)
+				snprintf(img_path,sizeof(img_path),"%s/%s/%s.png", M4W_HOMEUSB, M4W_SNAP, game_list[current].rom);
+			else if(game_list[current].flags & M4W_FLAGS_PNGONSD)
+				snprintf(img_path,sizeof(img_path),"%s/%s/%s.png", M4W_HOME, M4W_SNAP, game_list[current].rom);
+			else
+				snprintf(img_path,sizeof(img_path),noimg_path);
+			
+			img = GRRLIB_LoadTextureFromFile(img_path);
+		}
+		GRRLIB_DrawImg(M4W_POSKEY_X,0,img,0,1,1,0xffffffff);
+
+			
 	//	print_ttf(20, 400, M4W_TEXT_COLOR, "input = %d idx = %d (%s)", input, pattern_idx, pattern);
 	//	print_ttf(20, 400, M4W_TEXT_COLOR, "argc = %d argv = <%s>", argc, (argc > 1) ? argv[1] : "empty");
 		if(pointer_flag == true) {

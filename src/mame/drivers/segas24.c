@@ -1490,7 +1490,7 @@ static INPUT_PORTS_START( dcclub ) /* In the Japan set missing angle input */
 	PORT_BIT( 0xff, 0x00, IPT_PADDLE ) PORT_MINMAX(0x00,0x8f) PORT_SENSITIVITY(64) PORT_KEYDELTA(64) PORT_PLAYER(1)
 INPUT_PORTS_END
 #endif
-
+#if 0
 static INPUT_PORTS_START( sgmast )
 	PORT_INCLUDE( system24_generic )
 
@@ -1528,7 +1528,7 @@ static INPUT_PORTS_START( sgmast )
 	PORT_DIPSETTING(    0x20, DEF_STR( Harder ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( Hardest ) )
 INPUT_PORTS_END
-
+#endif
 #if 0
 static INPUT_PORTS_START( sgmastj )
 	PORT_INCLUDE( sgmast )
@@ -2015,7 +2015,7 @@ ROM_START( sspirtfc )
 	ROM_LOAD( "ds3-5000-02c.img", 0x000000, 0x1c2000, NO_DUMP )
 ROM_END
 #endif
-
+#if 0
 ROM_START( sgmast )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 68000 code */
 	ROM_LOAD16_BYTE( "epr-12187.ic2", 0x000000, 0x20000, CRC(e83783f3) SHA1(4b3b32df7de85aef9cd77c8a4ffc17e10466b638) )
@@ -2031,7 +2031,7 @@ ROM_START( sgmast )
 	ROM_LOAD( "ds3-5000-05d_alt2.img", 0x000000, 0x1c2000, CRC(460bdcd5) SHA1(49b7384ac5742b45b7369f220f33f04ef955e992) )
 
 ROM_END
-
+#endif
 #if 0
 ROM_START( sgmastc )
 	ROM_REGION( 0x40000, "maincpu", 0 ) /* 68000 code */
@@ -2311,7 +2311,7 @@ static DRIVER_INIT( dcclubfd )
 	s24_fd1094_driver_init(machine);
 }
 #endif
-
+#if 0
 static DRIVER_INIT( sgmast )
 {
 	system24temp_sys16_io_set_callbacks(hotrod_io_r, hotrod_io_w, resetcontrol_w, iod_r, iod_w);
@@ -2319,7 +2319,7 @@ static DRIVER_INIT( sgmast )
 	track_size = 0x2d00;
 	s24_fd1094_driver_init(machine);
 }
-
+#endif
 #if 0
 static DRIVER_INIT( qsww )
 {
@@ -2374,7 +2374,7 @@ GAME( 1988, gground,  0,        system24_floppy, gground,  gground,  ROT270, "Se
 GAME( 1989, crkdown,  0,        system24_floppy, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (World, Floppy Based, FD1094 317-0058-04c)", GAME_IMPERFECT_GRAPHICS ) // clipping probs / solid layer probs? (radar display)
 //GAME( 1989, crkdownu, crkdown,  system24_floppy, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (US, Floppy Based, FD1094 317-0058-04d)", GAME_IMPERFECT_GRAPHICS ) // clipping probs / solid layer probs? (radar display)
 //GAME( 1989, crkdownj, crkdown,  system24_floppy, crkdown,  crkdown,  ROT0,   "Sega", "Crack Down (Japan, Floppy Based, FD1094 317-0058-04b Rev A)", GAME_IMPERFECT_GRAPHICS ) // clipping probs / solid layer probs? (radar display)
-GAME( 1989, sgmast,   0,        system24_floppy, sgmast,   sgmast,   ROT0,   "Sega", "Super Masters Golf (World?, Floppy Based, FD1094 317-0058-05d?)", GAME_NOT_WORKING|GAME_UNEMULATED_PROTECTION ) // NOT decrypted
+//GAME( 1989, sgmast,   0,        system24_floppy, sgmast,   sgmast,   ROT0,   "Sega", "Super Masters Golf (World?, Floppy Based, FD1094 317-0058-05d?)", GAME_NOT_WORKING|GAME_UNEMULATED_PROTECTION ) // NOT decrypted
 //GAME( 1989, sgmastc,  sgmast,   system24_floppy, sgmast,   sgmast,   ROT0,   "Sega", "Jumbo Ozaki Super Masters Golf (World, Floppy Based, FD1094 317-0058-05c)", GAME_IMPERFECT_GRAPHICS ) // some gfx offset / colour probs?
 //GAME( 1989, sgmastj,  sgmast,   system24_floppy, sgmastj,  sgmast,   ROT0,   "Sega", "Jumbo Ozaki Super Masters Golf (Japan, Floppy Based, FD1094 317-0058-05b)", GAME_IMPERFECT_GRAPHICS ) // some gfx offset / colour probs?
 //GAME( 1990, roughrac, 0,        system24_floppy, roughrac, roughrac, ROT0,   "Sega", "Rough Racer (Japan, Floppy Based, FD1094 317-0058-06b)", 0 )

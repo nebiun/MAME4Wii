@@ -1172,6 +1172,7 @@ INPUT_PORTS_END
 
 
 /* not verified, no manual found */
+#if 0
 static INPUT_PORTS_START( twotigrc )
 	PORT_START("SSIO.IP0")	/* J4 1-8 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -1202,7 +1203,7 @@ static INPUT_PORTS_START( twotigrc )
 	PORT_START("SSIO.DIP")
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
-
+#endif
 
 /* verified from wiring diagram, plus DIP switches from manual */
 static INPUT_PORTS_START( tapper )
@@ -2088,6 +2089,7 @@ ROM_START( twotiger )
 	ROM_LOAD( "82s123.12d",   0x0000, 0x0020, CRC(e1281ee9) SHA1(9ac9b01d24affc0ee9227a4364c4fd8f8290343a) )	/* from shollow, assuming it's the same */
 ROM_END
 
+#if 0
 ROM_START( twotigerc )
 	ROM_REGION( 0x10000, "maincpu", 0 )
 	ROM_LOAD( "2tgrpg0.bin",  0x0000, 0x2000, CRC(e77a924b) SHA1(c1720a8a6ca8e6551ef38d565d5f18db7fbd5d2e) )
@@ -2113,7 +2115,7 @@ ROM_START( twotigerc )
 	ROM_REGION( 0x0020, "proms", 0 )
 	ROM_LOAD( "82s123.12d",   0x0000, 0x0020, CRC(e1281ee9) SHA1(9ac9b01d24affc0ee9227a4364c4fd8f8290343a) )	/* from shollow, assuming it's the same */
 ROM_END
-
+#endif
 
 ROM_START( journey )
 	ROM_REGION( 0x10000, "maincpu", 0 )
@@ -2641,7 +2643,7 @@ GAME( 1982, tron,     0,        mcr_90010,     tron,     mcr_90010, ROT90, "Ball
 //GAME( 1982, tron4,    tron,     mcr_90010,     tron,     mcr_90010, ROT90, "Bally Midway", "Tron (6/15)", GAME_SUPPORTS_SAVE )
 GAME( 1982, domino,   0,        mcr_90010,     domino,   mcr_90010, ROT0,  "Bally Midway", "Domino Man", GAME_SUPPORTS_SAVE )
 GAME( 1982, wacko,    0,        mcr_90010,     wacko,    wacko,     ROT0,  "Bally Midway", "Wacko", GAME_SUPPORTS_SAVE )
-GAME( 1984, twotigerc,twotiger, mcr_90010,     twotigrc, mcr_90010, ROT0,  "Bally Midway", "Two Tigers (Tron conversion)", GAME_SUPPORTS_SAVE )
+//GAME( 1984, twotigerc,twotiger, mcr_90010,     twotigrc, mcr_90010, ROT0,  "Bally Midway", "Two Tigers (Tron conversion)", GAME_SUPPORTS_SAVE )
 
 /* hacked 90010 CPU board + 91399 video gen + 90913 sound I/O + 8-track interface */
 GAME( 1984, twotiger, 0,        mcr_90010,     twotiger, twotiger,  ROT0,  "Bally Midway", "Two Tigers (dedicated)", GAME_IMPERFECT_SOUND | GAME_SUPPORTS_SAVE )

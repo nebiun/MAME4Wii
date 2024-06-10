@@ -534,6 +534,7 @@ static INPUT_PORTS_START( fround )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
 
+#if 0
 static INPUT_PORTS_START( miaj )
 	PORT_START("SYSTEM")	/* 0xa0001 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -590,7 +591,8 @@ static INPUT_PORTS_START( miaj )
 	PORT_BIT( 0x08, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
-
+#endif
+#if 0
 static INPUT_PORTS_START( cuebrickj )
 	PORT_START("SYSTEM")	/* 0xa0001 */
 	PORT_BIT( 0x01, IP_ACTIVE_LOW, IPT_COIN1 )
@@ -651,6 +653,7 @@ static INPUT_PORTS_START( cuebrickj )
 	PORT_DIPSETTING(    0x00, "4" )
 	PORT_BIT( 0xf0, IP_ACTIVE_LOW, IPT_UNUSED )
 INPUT_PORTS_END
+#endif
 
 /* Graphics Layouts */
 
@@ -826,19 +829,21 @@ static MACHINE_DRIVER_START( fround )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "rspeaker", 0.20)
 MACHINE_DRIVER_END
 
+#if 0
 static MACHINE_DRIVER_START( miaj )
 	MDRV_IMPORT_FROM(twin16)
 	MDRV_SCREEN_MODIFY("screen")
 	MDRV_SCREEN_VISIBLE_AREA(1*8, 39*8-1, 2*8, 30*8-1)
 MACHINE_DRIVER_END
-
+#endif
+#if 0
 static MACHINE_DRIVER_START( cuebrickj )
 	MDRV_IMPORT_FROM(twin16)
 	MDRV_SCREEN_MODIFY("screen")
 	MDRV_SCREEN_VISIBLE_AREA(1*8, 39*8-1, 2*8, 30*8-1)
 	MDRV_NVRAM_HANDLER(generic_0fill)
 MACHINE_DRIVER_END
-
+#endif
 /* ROMs */
 
 ROM_START( devilw )
@@ -1247,7 +1252,7 @@ ROM_START( hpuncher )
 	ROM_LOAD( "870_c02.7c", 0x00000, 0x20000, CRC(54e12c6d) SHA1(8171441aeb1a1dc4d65fae59c7c217f992f70cbc) )
 ROM_END
 #endif
-
+#if 0
 ROM_START( miaj )
 	ROM_REGION( 0x40000, "maincpu", 0 ) 	// 68000 code (CPU A)
 	ROM_LOAD16_BYTE("808_r05.6n", 0x00000, 0x10000, CRC(91fd83f4) SHA1(12cba5828d1d752efe4fc1972bed0205ac277850) )
@@ -1278,7 +1283,8 @@ ROM_START( miaj )
 
 	ROM_REGION( 0x20000, "upd", ROMREGION_ERASE00 ) 	// samples
 ROM_END
-
+#endif
+#if 0
 ROM_START( cuebrickj )
 	ROM_REGION( 0x40000, "maincpu", 0 ) 	// 68000 code (CPU A)
 	ROM_LOAD16_BYTE( "903_e05.6n",	0x00000, 0x10000, CRC(8b556220) SHA1(dbe24133e74018c4fe9332519394cbb882c4ed5a) )
@@ -1311,7 +1317,7 @@ ROM_START( cuebrickj )
 	ROM_REGION( 0x20000, "upd", ROMREGION_ERASE00 ) 	// samples
 	// unpopulated
 ROM_END
-
+#endif
 /* Driver Initialization */
 
 static void gfx_untangle( running_machine *machine )
@@ -1342,7 +1348,7 @@ static DRIVER_INIT( fround )
 	gfx_untangle(machine);
 	twin16_custom_video = 1;
 }
-
+#if 0
 static DRIVER_INIT( cuebrickj )
 {
 	gfx_untangle(machine);
@@ -1350,7 +1356,7 @@ static DRIVER_INIT( cuebrickj )
 	generic_nvram = (UINT8 *)cuebrickj_nvram;
 	generic_nvram_size = 0x400*0x20;
 }
-
+#endif
 /* Game Drivers */
 
 GAME( 1987, devilw,   0,        devilw,		devilw,   twin16,   ROT0, "Konami", "Devil World", GAME_SUPPORTS_SAVE )
@@ -1366,5 +1372,5 @@ GAME( 1988, vulcan,   0,        twin16,		vulcan,   twin16,   ROT0, "Konami", "Vu
 GAME( 1988, fround,   0,        fround,		fround,   fround,   ROT0, "Konami", "The Final Round (version M)", GAME_SUPPORTS_SAVE )
 //GAME( 1988, froundl,  fround,   fround,		fround,   fround,   ROT0, "Konami", "The Final Round (version L)", GAME_SUPPORTS_SAVE )
 //GAME( 1988, hpuncher, fround,   twin16,		fround,   twin16,   ROT0, "Konami", "Hard Puncher (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, miaj,     mia,      miaj,		miaj,     twin16,   ROT0, "Konami", "M.I.A. - Missing in Action (Japan)", GAME_SUPPORTS_SAVE )
-GAME( 1989, cuebrickj,cuebrick, cuebrickj,	cuebrickj,cuebrickj,ROT0, "Konami", "Cue Brick (Japan)", GAME_SUPPORTS_SAVE )
+//GAME( 1989, miaj,     mia,      miaj,		miaj,     twin16,   ROT0, "Konami", "M.I.A. - Missing in Action (Japan)", GAME_SUPPORTS_SAVE )
+//GAME( 1989, cuebrickj,cuebrick, cuebrickj,	cuebrickj,cuebrickj,ROT0, "Konami", "Cue Brick (Japan)", GAME_SUPPORTS_SAVE )

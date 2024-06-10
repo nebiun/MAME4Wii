@@ -39,9 +39,9 @@ int main(int argc, char *argv[])
 				printf("Loading %s...\n",argv[2]);
 			else
 				printf("Loading %s...\n",argv[3]);
-			runDOL (argv[1], argc-2, (const char **)&argv[2]);
-			exit(1);
+			runDOL (argv[1], argc-2, (const char **)&argv[2]);		
 			VIDEO_WaitVSync();
+			exit(1);
 		}
 	}	
 }

@@ -29,8 +29,8 @@
 //============================================================
 //  CONSTANTS
 //============================================================
-#define MAME4WII_LOGDIR		"sd:/mame/logs"
-#define MAME4WII_CRASHDIR	"sd:/mame/crash"
+#define MAME4WII_LOGDIR		"logs"
+#define MAME4WII_CRASHDIR	"crash"
 
 //============================================================
 //  GLOBALS
@@ -59,7 +59,7 @@ static wii_buffer_t memory_buffers[N_MEMORY_BUFFER];
 
 static const options_entry wii_mame_options[] =
 {
-	{ "initpath", ".;/mame", 0, "path to ini files" },
+	{ "initpath", ".;/mame4wii", 0, "path to ini files" },
 	{ NULL, NULL, OPTION_HEADER, "WII OPTIONS" },
 	{ "safearea(0.01-1)", "1.0", 0, "Adjust video for safe areas on older TVs (.9 or .85 are usually good values)" },
 	{ NULL }
@@ -129,7 +129,7 @@ void *wii_calloc(size_t n)
 
 void wii_debug(const char *format, ...)
 {
-	static const char *debug_file = MAME4WII_LOGDIR"/mame4wii.log";
+	static const char *debug_file = MAME4WII_HOME"/"MAME4WII_LOGDIR"/mame4wii.log";
 	static int first;
 	static sem_t sem;
 	va_list aptr;
@@ -217,7 +217,7 @@ void wii_clean_memory_buffers(running_machine *machine)
 void wii_printf(const char *format, ...)
 {
 	static int first=0;
-	static const char *debug_file = MAME4WII_LOGDIR"/mame4wii_info.txt";
+	static const char *debug_file = MAME4WII_HOME"/"MAME4WII_LOGDIR"/mame4wii_info.txt";
 	va_list aptr;
 	FILE *fp;
 
@@ -267,6 +267,12 @@ int main(int argc, char *argv[])
 	static const char *vv="MAME4Wii v.%s\n";
 	const char *args[5] = { NULL };
 	int ret;
+	const char *pwd = MAME4WII_HOME;
+
+	if(argc == 0) {
+		argv[0] = (char *)"";
+		argc = 1;
+	}
 	
 	L2Enhance();
 	VIDEO_Init();
@@ -278,7 +284,24 @@ int main(int argc, char *argv[])
 	SYS_SetResetCallback(wii_reset);
 
 	fatInitDefault();
-	if (chdir("usb:/mame/") == 0 || chdir("sd:/mame/") == 0);
+	if(argc == 1) {
+		if (chdir(MAME4WII_HOMEUSB) == 0) {
+			pwd = MAME4WII_HOMEUSB;
+		}
+		else {
+			chdir(MAME4WII_HOME);
+		}
+	}
+	else {
+		char rom_path[PATH_MAX];
+		
+		// Check rom
+		snprintf(rom_path,sizeof(rom_path),"%s/roms/%s.zip",MAME4WII_HOMEUSB,argv[1]);
+		if(access(rom_path, R_OK) == 0) {
+			pwd = MAME4WII_HOMEUSB;
+		}
+		chdir(pwd);
+	}
 	wii_debug(vv, build_version);
 	wii_printf(vv, build_version);
 
@@ -290,11 +313,6 @@ int main(int argc, char *argv[])
 
 	// cli_execute does the heavy lifting; if we have osd-specific options, we
 	// would pass them as the third parameter here
-	if(argc == 0) {
-		argv[0] = (char *)"";
-		argc = 1;
-	}
-	
 	ret = cli_execute(argc, argv, wii_mame_options);
 	wii_debug("%s: cli_execute %s rtn %d\n", __FUNCTION__, (argc > 1) ? argv[1] : "<none>", ret);
 	
@@ -303,12 +321,12 @@ int main(int argc, char *argv[])
 	wii_shutdown_video();
 
 	if(argc > 1) {
-		char crash_path[PATH_MAX];
+		char tmp_path[PATH_MAX];
 		
-		snprintf(crash_path, sizeof(crash_path), "%s/%s", MAME4WII_CRASHDIR, argv[1]);
+		snprintf(tmp_path, sizeof(tmp_path), "%s/%s/%s", pwd, MAME4WII_CRASHDIR, argv[1]);
 		if(ret != 0) {
 			FILE *fp;
-			if( (fp = fopen(crash_path,"w")) != NULL) {
+			if( (fp = fopen(tmp_path,"w")) != NULL) {
 				const char *p;
 				
 				switch(ret) {
@@ -353,15 +371,17 @@ int main(int argc, char *argv[])
 			}
 		}
 		else {
-			unlink(crash_path);
+			unlink(tmp_path);
 		}
-			
+				
 		args[0] = "loader";
 		args[1] = "sd:/apps/mame4wii/boot.dol";
 		args[2] = "menu";
 		args[3] = argv[1];
 
-		ret = runDOL ("sd:/mame/libs/loader.dol", 4, args);
+		snprintf(tmp_path, sizeof(tmp_path), "%s/libs/loader.dol", pwd);
+		
+		ret = runDOL (tmp_path, 4, args);
 		wii_debug("%s: runDOL %s rtn %d\n", __FUNCTION__, args[1], ret);
 	}
 	return 0;	/* Dovrebbe ritornare al menu` */
@@ -449,6 +469,8 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 		switch(typedesc->type) 
 		{
 		case IPT_JOYSTICK_UP:
+		case IPT_JOYSTICKRIGHT_UP:
+		case IPT_JOYSTICKLEFT_UP:
 			switch(typedesc->player)
 			{
 			case 0:
@@ -478,6 +500,8 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 			}
 			break;
 		case IPT_JOYSTICK_DOWN:
+		case IPT_JOYSTICKRIGHT_DOWN:
+		case IPT_JOYSTICKLEFT_DOWN:
 			switch(typedesc->player)
 			{
 			case 0:
@@ -507,6 +531,8 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 			}		
 			break;
 		case IPT_JOYSTICK_LEFT:
+		case IPT_JOYSTICKRIGHT_LEFT:
+		case IPT_JOYSTICKLEFT_LEFT:
 			switch(typedesc->player)
 			{
 			case 0:
@@ -536,6 +562,8 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 			}		
 			break;		
 		case IPT_JOYSTICK_RIGHT:
+		case IPT_JOYSTICKRIGHT_RIGHT:
+		case IPT_JOYSTICKLEFT_RIGHT:
 			switch(typedesc->player)
 			{
 			case 0:
