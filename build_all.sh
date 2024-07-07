@@ -133,7 +133,7 @@ then
 	# BUILD APP ARCHIVE
 	cd ${hbc_home}
 	rm -f mame4wii-*.zip
-	zip -r mame4wii-${m4w_version}.zip apps mame
+	zip -r mame4wii-${m4w_version}.zip apps mame4wii
 	cd ${cwd}
 
 	if [[ -d mame4wii_snap ]]

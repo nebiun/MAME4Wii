@@ -507,15 +507,15 @@ static void *wii_video_thread(void *arg)
 			clearScreenTexs();
 			currfb ^= 1;
 			GX_CopyDisp(xfb[currfb],GX_TRUE);
-;	
+			
 			VIDEO_SetNextFramebuffer(xfb[currfb]);
 
-			VIDEO_Flush();
-			VIDEO_WaitVSync();
 		}
 		else {
 			LWP_ThreadSleep(videoqueue);
 		}
+		VIDEO_Flush();
+		VIDEO_WaitVSync();
 	}
 	
 	return (void *)0;
@@ -538,9 +538,9 @@ void wii_video_render(render_target *target, int flag)
 					w_index++;
 					if(w_index >= &currlist[WII_VIDEO_SLOT])
 						w_index = &currlist[0];
-					LWP_ThreadSignal(videoqueue);
 				}
 				done++;
+				LWP_ThreadSignal(videoqueue);
 			}
 			
 		//	LWP_YieldThread();
